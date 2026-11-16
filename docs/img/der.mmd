@@ -1,0 +1,112 @@
+erDiagram
+    aerodromo ||--o{ pista : "possui"
+    aerodromo ||--o{ voo : "origem de"
+    aerodromo ||--o{ voo : "destino de"
+    operador ||--o{ aeronave : "opera"
+    operador |o--o{ piloto : "vincula"
+    modelo_aeronave ||--o{ aeronave : "classifica"
+    aeronave ||--o{ voo : "executa"
+    voo ||--o{ voo_piloto : "tem tripulante"
+    piloto ||--o{ voo_piloto : "atua em"
+    voo ||--o{ voo_setor : "atravessa"
+    setor_aereo ||--o{ voo_setor : "é atravessado em"
+    voo ||--o{ ocorrencia : "registra"
+    voo ||--o| plano_voo : "possui"
+
+    aerodromo {
+        int id_aerodromo PK
+        char(4) codigo_icao UK
+        varchar(120) nome
+        varchar(80) cidade
+        char(2) uf
+        varchar(10) tipo
+    }
+    pista {
+        int id_pista PK
+        int id_aerodromo FK
+        varchar(7) designacao
+        int comprimento_m
+        varchar(10) tipo_piso
+        varchar(12) situacao
+    }
+    operador {
+        int id_operador PK
+        varchar(120) nome UK
+        varchar(12) tipo
+        varchar(80) cidade
+        char(2) uf
+    }
+    modelo_aeronave {
+        int id_modelo_aeronave PK
+        varchar(60) fabricante
+        varchar(60) nome_modelo
+        tinyint numero_assentos
+        smallint potencia_hp
+    }
+    aeronave {
+        int id_aeronave PK
+        varchar(6) matricula UK
+        int id_modelo_aeronave FK
+        int id_operador FK
+        smallint ano_fabricacao
+        varchar(12) situacao
+    }
+    piloto {
+        int id_piloto PK
+        varchar(120) nome
+        varchar(10) numero_licenca UK
+        varchar(6) categoria
+        boolean instrutor
+        varchar(8) situacao
+        int id_operador FK
+    }
+    setor_aereo {
+        int id_setor_aereo PK
+        varchar(20) sigla UK
+        varchar(120) nome
+        char(3) tipo
+    }
+    voo {
+        int id_voo PK
+        int id_aeronave FK
+        int id_aerodromo_origem FK
+        int id_aerodromo_destino FK
+        varchar(10) finalidade
+        datetime partida_prevista
+        datetime chegada_prevista
+        datetime partida_real
+        datetime chegada_real
+        varchar(10) situacao
+    }
+    voo_piloto {
+        int id_voo_piloto PK
+        int id_voo FK
+        int id_piloto FK
+        varchar(10) funcao
+    }
+    voo_setor {
+        int id_voo_setor PK
+        int id_voo FK
+        int id_setor_aereo FK
+        tinyint ordem_travessia
+        datetime horario_entrada
+        datetime horario_saida
+    }
+    ocorrencia {
+        int id_ocorrencia PK
+        int id_voo FK
+        varchar(25) tipo
+        varchar(5) gravidade
+        varchar(255) descricao
+        datetime data_hora
+        smallint minutos_atraso
+    }
+    plano_voo {
+        int id_plano_voo PK
+        int id_voo FK, UK
+        char(3) regra_voo
+        smallint altitude_cruzeiro_pes
+        smallint velocidade_cruzeiro_kt
+        smallint autonomia_min
+        tinyint pessoas_a_bordo
+    }
